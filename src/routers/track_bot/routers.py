@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Query, Depends
 
 from src.controllers.track_bot.controller import TrackBotController
-from src.domain.validators.track_bot.validators import ChallengeValidator
+from src.domain.validators.track_bot.validators import ChallengeInputValidator
 
 
 class TrackBotRouters:
@@ -13,8 +13,7 @@ class TrackBotRouters:
 
     @staticmethod
     @__track_bot_routers.get("/track_bot")
-    async def validate_web_hook(challenge_input: ChallengeValidator = Depends()):
-    # async def validate_web_hook(hub_mode: str = Query(alias="hub.mode"), hub_challenge: int = Query(alias="hub.challenge"), hub_verify_token=Query(alias="hub.verify_token")):
-        # response = TrackBotController.validate_web_hook()
-        return challenge_input.hub_challenge
-        # return hub_challenge
+    async def subscribe_web_hook(challenge_input: ChallengeInputValidator = Depends(ChallengeInputValidator)):
+        response = await TrackBotController.subscribe_web_hook(challenge_input=challenge_input)
+
+        return response
